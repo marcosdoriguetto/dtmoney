@@ -1,10 +1,13 @@
 import Modal from 'react-modal';
-import { ButtonTransaction, Container, TransactionTypeContainer } from './styles';
+
+import { FormEvent, useContext, useState } from 'react';
+
 import closeModalImg from '../../assets/close.svg';
 import incomeIconImg from '../../assets/income.svg';
 import outcomeIconImg from '../../assets/outcome.svg';
-import { FormEvent, useState } from 'react';
-import { api } from '../../services/api';
+
+import { ButtonTransaction, Container, TransactionTypeContainer } from './styles';
+import { TransactionsContext } from '../../TransactionsContext';
 
 type NewTransactionModalProps = {
   isOpen: boolean;
@@ -14,22 +17,27 @@ type NewTransactionModalProps = {
 Modal.setAppElement('#root') //Acessibilidade(Está na doc do react-modal)
 
 export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionModalProps) {
-  const [title, setTitle] = useState('');
-  const [value, setValue] = useState(0);
-  const [category, setCategory] = useState('');
-  const [typeTransaction, setTypeTransaction] = useState('');
+  const { createTransaction } = useContext(TransactionsContext)
 
-  function handleCreateNewTransaction(event: FormEvent) {
+  const [title, setTitle] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState('');
+  const [type, setType] = useState('');
+
+  async function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault();
 
-    const data = {
+    await createTransaction({
       title,
-      value,
+      amount,
       category,
-      typeTransaction,
-    }
-    
-    api.post('/transactions', data)
+      type,
+    })
+
+    setTitle('')
+    setAmount(0)
+    setCategory('')
+    setType('')
   }
 
   return(
@@ -59,15 +67,15 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
         <input
           placeholder="Valor" 
           type="number"
-          value={value}
-          onChange={event => setValue(Number(event.target.value))}  
+          value={amount}
+          onChange={event => setAmount(Number(event.target.value))}  
         />
 
         <TransactionTypeContainer>
           <ButtonTransaction 
             type="button" 
-            onClick={ () => setTypeTransaction('deposit') }
-            isActive={typeTransaction === 'deposit'}
+            onClick={ () => setType('deposit') }
+            isActive={type === 'deposit'}
             activeColor="green"
           >
             <img src={incomeIconImg} alt="Entrada" />
@@ -76,8 +84,8 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
 
           <ButtonTransaction 
             type="button" 
-            onClick={ () => setTypeTransaction('withdraw') }
-            isActive={typeTransaction === 'withdraw'}
+            onClick={ () => setType('withdraw') }
+            isActive={type === 'withdraw'}
             activeColor="red"
           >
             <img src={outcomeIconImg} alt="Saída" />
