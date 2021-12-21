@@ -7,15 +7,28 @@ import { Container } from "./styles";
 
 export function Summary() {
   const { transactions } = useContext(TransactionsContext)
+  console.log(transactions);
+
+  function totalAmountCategory(type: string) {
+    const amountTransactions = transactions
+      .filter(transaction => transaction.type === type)
+      .map(transaction => transaction.amount)
+
+    if (amountTransactions.length === 0) return 0
+
+    return amountTransactions.reduce((previousValue, nextValue) => previousValue + nextValue)  
+  }
+
+  const amountTotal = totalAmountCategory('deposit') - totalAmountCategory('withdraw');
 
   return(
-    <Container>
+    <Container activeColor={amountTotal >= 0 ? 'green' : 'red'}>
       <div>
         <header>
           <h1>Entradas</h1>
           <img src={iconIncome} alt="Entradas" />
         </header>
-        <strong>R$1000</strong>
+        <strong>R${totalAmountCategory('deposit')}</strong>
       </div>
 
       <div>
@@ -23,7 +36,7 @@ export function Summary() {
           <h1>Saídas</h1>
           <img src={iconOutcome} alt="Saídas" />
         </header>
-        <strong>- R$500</strong>
+        <strong>- R${totalAmountCategory('withdraw')}</strong>
       </div>
 
       <div className="highlight-background">
@@ -31,7 +44,7 @@ export function Summary() {
           <h1>Total</h1>
           <img src={iconTotal} alt="Total" />
         </header>
-        <strong>R$500</strong>
+        <strong>R${amountTotal}</strong>
       </div>
     </Container>
   )

@@ -33,8 +33,14 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
     .then(response => setTransactions(response.data.transactions))
   }, [])
 
-  async function createTransaction(transaction: TransactionsInput) {    
-    await api.post('/transactions', transaction);
+  async function createTransaction(transactionInput: TransactionsInput) {    
+    const response = await api.post('/transactions', transactionInput);
+    const { transaction } = response.data;
+
+    setTransactions([
+      ...transactions,
+      transaction
+    ])
   }
 
   return (

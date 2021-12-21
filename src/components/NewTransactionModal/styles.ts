@@ -78,7 +78,7 @@ export const ButtonTransaction = styled.button<ButtonTransactionProps>`
   transition: 0.15s ease-in;
 
   &:hover {
-    border-color: darken(0.9, '#d7d7d7');
+    border-color: ${darken(0.9, '#d7d7d7')};
   }
 
   img {
