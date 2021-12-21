@@ -10,13 +10,13 @@ export function Summary() {
   console.log(transactions);
 
   function totalAmountCategory(type: string) {
-    const amountTransactions = transactions
-      .filter(transaction => transaction.type === type)
-      .map(transaction => transaction.amount)
+    return transactions.reduce((accumulator, transaction) => {
+      if (transaction.type === type) {
+        return accumulator + transaction.amount;
+      }
 
-    if (amountTransactions.length === 0) return 0
-
-    return amountTransactions.reduce((previousValue, nextValue) => previousValue + nextValue)  
+      return accumulator;
+    }, 0)
   }
 
   const amountTotal = totalAmountCategory('deposit') - totalAmountCategory('withdraw');
