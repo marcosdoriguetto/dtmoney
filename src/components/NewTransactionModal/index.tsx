@@ -1,13 +1,12 @@
 import Modal from 'react-modal';
-
-import { FormEvent, useContext, useState } from 'react';
+import { useTransactions } from '../../hooks/useTransactions';
+import { FormEvent, useState } from 'react';
 
 import closeModalImg from '../../assets/close.svg';
 import incomeIconImg from '../../assets/income.svg';
 import outcomeIconImg from '../../assets/outcome.svg';
 
 import { ButtonTransaction, Container, TransactionTypeContainer } from './styles';
-import { TransactionsContext } from '../../TransactionsContext';
 
 type NewTransactionModalProps = {
   isOpen: boolean;
@@ -17,7 +16,7 @@ type NewTransactionModalProps = {
 Modal.setAppElement('#root') //Acessibilidade(Está na doc do react-modal)
 
 export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionModalProps) {
-  const { createTransaction } = useContext(TransactionsContext)
+  const { createTransaction } = useTransactions();
 
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState(0);

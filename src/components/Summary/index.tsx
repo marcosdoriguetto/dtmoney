@@ -1,12 +1,11 @@
-import { useContext } from 'react';
+import { useTransactions } from '../../hooks/useTransactions';
 import iconIncome from '../../assets/income.svg';
 import iconOutcome from '../../assets/outcome.svg';
 import iconTotal from '../../assets/total.svg';
-import { TransactionsContext } from '../../TransactionsContext';
 import { Container } from "./styles";
 
 export function Summary() {
-  const { transactions } = useContext(TransactionsContext)
+  const { transactions } = useTransactions();
   console.log(transactions);
 
   function totalAmountCategory(type: string) {
